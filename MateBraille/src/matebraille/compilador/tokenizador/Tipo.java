@@ -11,27 +11,36 @@ package matebraille.compilador.tokenizador;
  */
 public enum Tipo {
     /**
-     *Comando compuesto. Por ejemplo "\frac".
+     *Comando prefijo. Por ejemplo "\frac".
      */
-    CMD,
+    PREFIJO,
 
     /**
-     * Caracter.
+     *Comando infijo. Por ejemplo "\choose".
      */
-    CHR,
-
+    INFIJO,
+    
     /**
      *Llave apertura.
      */
-    B_INI,
+    L_INI,
 
     /**
      * Llave cierre.
      */
-    B_FIN,
+    L_FIN,
 
     /**
      * Simbolos como por ejemplo "\pi"
      */
-    SIMB
+    SIMB,
+    
+    /**
+     * Signo "$"
+     */
+    MODO_MATE, 
+    /**
+     * Signo "$$"
+     */
+    MODO_MATE_2
 }

@@ -19,7 +19,7 @@ public class MateBraille {
     public static void main(String[] args) {
         // TODO code application logic here
         ListaComandos lcmd = new ListaComandos();
-        System.out.print(lcmd.existeCmd("\\alpha"));
+        System.out.print(lcmd.getCmd("\\alpha").getLiteral());
     }
     
 }

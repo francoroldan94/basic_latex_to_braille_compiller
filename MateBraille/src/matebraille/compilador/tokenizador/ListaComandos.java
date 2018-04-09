@@ -11,19 +11,27 @@ import java.util.ArrayList;
  *
  * @author franco
  */
-public class ListaComandos {
-     private ArrayList<Comando> listaCmd;
+public final class ListaComandos {
+     private final ArrayList<Comando> listaCmd = new ArrayList<>();
      /**
       * Inicializa la lista de comandos, necesario, puesto que después
-      * serán obtenidos desde archivo en versiones futuras.
+      * serán obtenidos desde archivo.
       */
+     
      public ListaComandos(){
-         listaCmd = new ArrayList<Comando>();
-         listaCmd.add(new Comando("\\phi"));
-         listaCmd.add(new Comando("\\alpha"));
+         nuevoCmd(new Comando("$", 0,Tipo.MODO_MATE));
+         nuevoCmd(new Comando("$$", 0,Tipo.MODO_MATE_2));
+         nuevoCmd(new Comando("\\alpha",0,Tipo.SIMB));
      }
      
-     public int existeCmd(String cmd){
+     public void nuevoCmd(Comando cmd){
+         this.listaCmd.add(cmd);
+     }
+     public Comando getCmd(String valor){
+             return this.getCmdPorIndice(this.buscarCmd(valor));
+     }
+     
+     private int buscarCmd(String cmd){
         for(int i = 0; i < listaCmd.size();i++){
             if(listaCmd.get(i).getLiteral().equals(cmd)){
                 return i;
@@ -31,4 +39,10 @@ public class ListaComandos {
         }
         return -1;
      }
+     private Comando getCmdPorIndice(int indice){
+         if(!(0<=indice && indice<this.listaCmd.size()))
+             return null;
+         return listaCmd.get(indice);
+     }
+     
 }
