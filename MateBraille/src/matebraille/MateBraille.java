@@ -5,6 +5,8 @@
  */
 package matebraille;
 
+import matebraille.compilador.tokenizador.ListaComandos;
+
 /**
  *
  * @author franco
@@ -16,8 +18,8 @@ public class MateBraille {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        System.out.print("Hola mundo \n");
-        System.out.print("Chau mundo \n");
+        ListaComandos lcmd = new ListaComandos();
+        System.out.print(lcmd.existeCmd("\\alpha"));
     }
     
 }
