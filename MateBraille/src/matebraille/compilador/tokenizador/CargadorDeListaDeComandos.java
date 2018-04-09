@@ -11,10 +11,20 @@ package matebraille.compilador.tokenizador;
  */
 public final class CargadorDeListaDeComandos {
     private ListaComandos lCmd = null;
+
+    /**
+     *
+     * @param lCmd
+     */
     public CargadorDeListaDeComandos(ListaComandos lCmd){
         this.lCmd = lCmd;        
     }
     
+    /**
+     *
+     * @param lista
+     * @return
+     */
     public boolean procesar(String lista){
         //TODO: Procesar el archivo de listas
         return false;

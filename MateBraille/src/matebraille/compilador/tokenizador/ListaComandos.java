@@ -19,15 +19,27 @@ public final class ListaComandos {
       */
      
      public ListaComandos(){
+         //Cargo los comandos básicos.
          nuevoCmd(new Comando("$", 0,Tipo.MODO_MATE));
          nuevoCmd(new Comando("$$", 0,Tipo.MODO_MATE_2));
-         nuevoCmd(new Comando("\\alpha",0,Tipo.SIMB));
+         nuevoCmd(new Comando("{",0,Tipo.L_INI));
+         nuevoCmd(new Comando("}",0,Tipo.L_FIN));
      }
      
-     public void nuevoCmd(Comando cmd){
+    /**
+     *
+     * @param cmd
+     */
+    public void nuevoCmd(Comando cmd){
          this.listaCmd.add(cmd);
      }
-     public Comando getCmd(String valor){
+
+    /**
+     *
+     * @param valor
+     * @return
+     */
+    public Comando getCmd(String valor){
              return this.getCmdPorIndice(this.buscarCmd(valor));
      }
      

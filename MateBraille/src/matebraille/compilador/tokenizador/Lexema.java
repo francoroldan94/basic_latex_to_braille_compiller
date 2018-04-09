@@ -34,14 +34,26 @@ public class Lexema {
         this.cmd = cmd;
     }
 
+    /**
+     *
+     * @return
+     */
     public Comando getCmd() {
         return cmd;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isEsCmd() {
         return esCmd;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getValor() {
         if(this.esCmd){
             return cmd.getLiteral();
@@ -51,6 +63,10 @@ public class Lexema {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPosicion() {
         return posicion;
     }

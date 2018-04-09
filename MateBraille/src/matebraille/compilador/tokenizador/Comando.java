@@ -33,12 +33,26 @@ public class Comando {
         this.tipo = tipo;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getLiteral() {
         return literal;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getAridad() {
         return aridad;
     }
+
+    /**
+     *
+     * @return
+     */
     public Tipo getTipo() {
         return tipo;
     }
