@@ -28,9 +28,9 @@ public class ResultadoTokenizador {
     private ArrayList<InfoSintaxis> advertencias = null;
 
     public ResultadoTokenizador() {
-        lexemas = new ArrayList<Lexema>();
-        errores = new ArrayList<InfoSintaxis>();
-        advertencias = new ArrayList<InfoSintaxis>();
+        lexemas = new ArrayList<>();
+        errores = new ArrayList<>();
+        advertencias = new ArrayList<>();
 
     }
 
