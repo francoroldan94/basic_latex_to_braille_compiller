@@ -20,22 +20,27 @@ public final class Tokenizador {
 
     /**
      * Constuctor básico, inicializa.
+     * @param listaCmd 
+     * Lista de comandos especiales "\nombre"
+     * @param codigo
+     * Código a procesar.
      */
     public Tokenizador(ListaComandos listaCmd, String codigo) {
         this.listaCmd = listaCmd;
         this.codigo = codigo;
     }
-
+    
+//-----------------Validaciones previas a la tokenizacion-----------------------
     public boolean validacionPrevia() {
         res = new ResultadoTokenizador();
     //Sucesión de procedimientos del tokenizador
         if (!NoVacio()) return false;
         //Desde el punto de vista lexico.
-        if (!modoMatematicoCorrecto()) return false;
         
-        return true;
+       if (!modoMatematicoCorrecto()) return false;
+        
+       return true;
     }
-
     /**
      * Indica si el codigo es vacio
      *
@@ -53,11 +58,10 @@ public final class Tokenizador {
         }
         return true;
     }
-
     /**
      * Detecta si el modo matemático se presenta en una secuencia correcta, es
      * decir la no existencia de "$$$". Lo cual implica que las apariciones son
-     * Solamente de la forma: $ o $$.
+     * Solamente de la forma: $ o $$. Se detecta la cohesion de bloques.
      *
      * @return
      */
@@ -65,7 +69,7 @@ public final class Tokenizador {
         ///TODO: Verificar todos los $$$, no solo el primero.
         
         int doble = 0, simple = 0, pos;
-        
+        boolean doble_inicio = true, simple_inicio = true;
         pos = codigo.indexOf("$$$", 0);
         if (codigo.indexOf("$$$", 0) != -1) {
             InfoSintaxis info = new InfoSintaxis();
@@ -75,11 +79,50 @@ public final class Tokenizador {
             info.setContenido("$$$");
             info.setInformación("Error: Se ha introducido \"$$$\", lo cual es incogruente. \nSe debe separar la tríada.");
             info.setPosicion(pos);
+            res.getErrores().add(info);
             return false;
+            
+        }
+        if(codigo.length() == 1) 
+            if(codigo.charAt(0) == '$'){
+            InfoSintaxis info =
+                    new InfoSintaxis("$","Error: Se ha introducido \"$\","
+                            + " lo cual es incogruente. "
+                            + "\nSe debe cerrar el modo matematico.",pos,1,1);
+            res.getErrores().add(info);
+            return false;
+            }
+        /**
+        * La idea es que siempre que se abra se sume uno y cuando se cierre se reste uno
+        * Si hay bloques del tipo contrario abuertos, se lanza una exepción.
+        */
+        for(int i = 0; i<codigo.length()-1;i++){
+            if(codigo.charAt(i) == '$' && codigo.charAt(i+1) != '$'){
+                if(simple_inicio){
+                    simple++;
+                }else{
+                    simple--;
+                    if(doble != 0){
+                        
+                    }
+                }
+                simple_inicio = !simple_inicio;
+            }else if(codigo.substring(i, i+1) == "$$"){
+                if(doble_inicio){
+                    doble++;
+                }else{
+                    doble--;
+                    if(simple != 0){
+                        //Error
+                    }
+                }
+                doble_inicio = !doble_inicio;
+            }
         }
         return true;
     }
 
+//-----------------------Utilidades---------------------------------------------
     private int contarColumnas(String texto){       
         
         int indice = 0,viejo_indice = 0;
@@ -93,7 +136,7 @@ public final class Tokenizador {
             }
         }
         
-        return texto.length()-viejo_indice-1;
+        return Integer.max((texto.length() - viejo_indice ),1);
     }
     private int contarFilas(String texto) {
         int lineas = 1, indice = 0;
@@ -108,5 +151,15 @@ public final class Tokenizador {
         return lineas;
     }
 
+//---------------------Analisis lexico------------------------------------------
+    public boolean analizarCodigo(){
+        
+        return true;
+    }
+
+    public ResultadoTokenizador getRes() {
+        return res;
+    }
+    
 }
 
