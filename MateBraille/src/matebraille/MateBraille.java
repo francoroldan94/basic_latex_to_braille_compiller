@@ -19,16 +19,17 @@ public class MateBraille {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-       ListaComandos lcmd = new ListaComandos();
-       //  System.out.print(lcmd.getCmd("\\alpha").getLiteral());
-       /*Tokenizador toke = new  Tokenizador(lcmd,"$$$");
-       System.out.print(toke.validacionPrevia()+"\n");
-       toke.analizarCodigo();
-       System.out.print(toke.getRes().getErrores().get(0).getInformación()+"\n"
-                        +"Columna: " + toke.getRes().getErrores().get(0).getColumna()
-                        +"\nFila: " + toke.getRes().getErrores().get(0).getFila()+"\n");
-        */
+        ListaComandos lcmd = new ListaComandos();
+        //  System.out.print(lcmd.getCmd("\\alpha").getLiteral());
+        Tokenizador toke = new Tokenizador(lcmd, "$$ $ $ ");
+        System.out.print(toke.validacionPrevia() + "\n");
+        toke.analizarCodigo();
+        for (int i = 0; i < toke.getRes().getErrores().size(); i++) {
+            System.out.print(toke.getRes().getErrores().get(i).getInformación() + "\n"
+                    + toke.getRes().getErrores().get(i).getContenido() + "\n"
+                    + "Columna: " + toke.getRes().getErrores().get(i).getColumna()
+                    + "\nFila: " + toke.getRes().getErrores().get(i).getFila() + "\n");
+        }
     }
-    
-    
+
 }
