@@ -8,18 +8,43 @@ package matebraille.compilador.tokenizador;
 import java.util.ArrayList;
 
 /**
- *Informa el resultado de la compilación
+ * Informa el resultado de la compilación
+ *
  * @author franco
  */
 public class ResultadoTokenizador {
-    private final ArrayList<Lexema> resultado = null;
-    private final ArrayList<InfoSintaxis> errores = null;
-    private final ArrayList<InfoSintaxis> advertencias = null;
-    public ResultadoTokenizador(){
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    /**
+     * Lexemas de salida
+     */
+    private ArrayList<Lexema> lexemas = null;
+    /**
+     * Lista de errores
+     */
+    private ArrayList<InfoSintaxis> errores = null;
+    /**
+     * Lista de Advertencias
+     */
+    private ArrayList<InfoSintaxis> advertencias = null;
+
+    public ResultadoTokenizador() {
+        lexemas = new ArrayList<Lexema>();
+        errores = new ArrayList<InfoSintaxis>();
+        advertencias = new ArrayList<InfoSintaxis>();
+
     }
 
     public ArrayList<Lexema> getLexemas() {
-        return resultado;
+        return lexemas;
     }
+
+
+    public ArrayList<InfoSintaxis> getErrores() {
+        return errores;
+    }
+
+    public ArrayList<InfoSintaxis> getAdvertencias() {
+        return advertencias;
+    }
+
 }

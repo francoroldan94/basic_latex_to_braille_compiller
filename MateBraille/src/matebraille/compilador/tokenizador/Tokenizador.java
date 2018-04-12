@@ -16,7 +16,7 @@ public final class Tokenizador {
 
     private final ListaComandos listaCmd;
     private final String codigo;
-    private ArrayList<ResultadoTokenizador> resultado;
+    private ResultadoTokenizador res;
     /**
      *Constuctor básico, inicializa.
      */
@@ -25,15 +25,23 @@ public final class Tokenizador {
         this.codigo = codigo;
     }
     
-    public ArrayList<ResultadoTokenizador> iniciarProceso(){
-        
-        return resultado;
+    public ResultadoTokenizador iniciarProceso(){
+        res = new ResultadoTokenizador();
+        //Sucesión de procedimientos del tokenizador
+        esVacio();
+        return res;
     }
     
-    private ResultadoTokenizador esVacio(){ 
+    private boolean esVacio(){ 
         if(codigo.equals("")){
-            
+            InfoSintaxis info = new InfoSintaxis();
+            info.setInformación("Código vacío.");
+            info.setColumna(0);
+            info.setFila(0);
+            res.getErrores().add(info);
+            return false;
         } 
+        return true;
     }
     
 }
