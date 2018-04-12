@@ -14,7 +14,26 @@ public class InfoSintaxis {
     private int posicion = -1, fila = 0, columna = 0;
     private String contenido;
     private String información;
-        
+
+    /**
+     *
+     * @param contenido
+     * @param información
+     * @param posicion
+     * @param fila
+     * @param columna
+     */
+    public InfoSintaxis(String contenido, String información,int posicion ,int fila , int columna){
+        this.contenido = contenido;
+        this.información = información;
+        this.posicion = posicion;
+        this.fila = fila;
+        this.columna = columna; 
+    }
+    public InfoSintaxis(){
+    }
+
+  
     public int getFila() {
         return fila;
     }

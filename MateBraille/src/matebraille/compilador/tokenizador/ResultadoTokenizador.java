@@ -39,12 +39,12 @@ public class ResultadoTokenizador {
     }
 
 
-    public ArrayList<InfoSintaxis> getErrores() {
+    public ArrayList<InfoSintaxis> getErrores() {           
         return errores;
     }
 
     public ArrayList<InfoSintaxis> getAdvertencias() {
         return advertencias;
     }
-
+    
 }
