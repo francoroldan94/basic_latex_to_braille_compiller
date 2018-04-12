@@ -12,7 +12,9 @@ package matebraille.compilador.tokenizador;
 public class InfoSintaxis {
 
     private int posicion = -1, fila = 0, columna = 0;
-
+    private String contenido;
+    private String información;
+        
     public int getFila() {
         return fila;
     }
@@ -29,7 +31,7 @@ public class InfoSintaxis {
         this.columna = columna;
     }
 
-    private String información;
+
 
     public int getPosicion() {
         return posicion;
@@ -55,5 +57,5 @@ public class InfoSintaxis {
         this.información = información;
     }
 
-    private String contenido;
+
 }

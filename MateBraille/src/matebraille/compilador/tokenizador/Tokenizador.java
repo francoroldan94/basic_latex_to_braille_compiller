@@ -5,6 +5,8 @@
  */
 package matebraille.compilador.tokenizador;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author franco
@@ -14,7 +16,7 @@ public final class Tokenizador {
 
     private final ListaComandos listaCmd;
     private final String codigo;
-
+    private ArrayList<ResultadoTokenizador> resultado;
     /**
      *Constuctor básico, inicializa.
      */
@@ -23,9 +25,15 @@ public final class Tokenizador {
         this.codigo = codigo;
     }
     
-    public ResultadoTokenizador iniciarProceso(){
-        ///TODO: Proceso de compilación.
-        throw new UnsupportedOperationException("Not supported yet.");        
+    public ArrayList<ResultadoTokenizador> iniciarProceso(){
+        
+        return resultado;
+    }
+    
+    private ResultadoTokenizador esVacio(){ 
+        if(codigo.equals("")){
+            
+        } 
     }
     
 }
