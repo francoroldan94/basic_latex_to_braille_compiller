@@ -21,9 +21,8 @@ public class MateBraille {
         // TODO code application logic here
         ListaComandos lcmd = new ListaComandos();
         //  System.out.print(lcmd.getCmd("\\alpha").getLiteral());
-        Tokenizador toke = new Tokenizador(lcmd, "$$ $ $ ");
-        System.out.print(toke.validacionPrevia() + "\n");
-        toke.analizarCodigo();
+        Tokenizador toke = new Tokenizador(lcmd, "$ $");
+        System.out.print(toke.analizarCodigo()+"\n");
         for (int i = 0; i < toke.getRes().getErrores().size(); i++) {
             System.out.print(toke.getRes().getErrores().get(i).getInformación() + "\n"
                     + toke.getRes().getErrores().get(i).getContenido() + "\n"

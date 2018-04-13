@@ -26,11 +26,11 @@ public final class Tokenizador {
      */
     public Tokenizador(ListaComandos listaCmd, String codigo) {
         this.listaCmd = listaCmd;
-        this.codigo = codigo;
+        this.codigo = codigo + "  ";
     }
 
 //-----------------Validaciones previas a la tokenizacion-----------------------
-    public boolean validacionPrevia() {
+    private boolean validacionPrevia() {
         res = new ResultadoTokenizador();
         //Sucesión de procedimientos del tokenizador
         if (!NoVacio()) {
@@ -44,14 +44,13 @@ public final class Tokenizador {
 
         return true;
     }
-
     /**
      * Indica si el codigo es vacio
      *
      * @return
      */
     private boolean NoVacio() {
-        if (codigo.equals("")) {
+        if (codigo.equals("  ")) {
             InfoSintaxis info = new InfoSintaxis();
             info.setInformación("Código vacío.");
             info.setColumna(0);
@@ -60,9 +59,9 @@ public final class Tokenizador {
             res.getErrores().add(info);
             return false;
         }
+
         return true;
     }
-
     /**
      * Detecta si el modo matemático se presenta en una secuencia correcta, es
      * decir la no existencia de "$$$". Lo cual implica que las apariciones son
@@ -85,53 +84,58 @@ public final class Tokenizador {
             res.getErrores().add(info);
             return false;
         }
-        int estado = 0, est_anterior = 0;
-        codigo.concat(" ");
+     
+        int estado = 0;
         for (int i = 0; i < codigo.length() - 1; i++) {
             switch (estado) {
                 case 0: //Inicial
                     if (i != codigo.length() - 2) {
-
-                    }
+                        if (esPesoAt(i)) {
+                            estado = 1;
+                        } else if (esPPesoAt(i)) {
+                            estado = 2;
+                            i++; //Esto es para esquivar el segundo peso
+                        }
+                    }              
                     break;
                 case 1: //$
                     //Error de paridad
                     if (i == codigo.length() - 2) {
-                        InfoSintaxis info
-                                = new InfoSintaxis("$", "Modo matemático incorecto, se esperaba \"$\"\n", i,
-                                        contarFilIndice(i), contarColIndice(i));
+                        InfoSintaxis info = new InfoSintaxis("$", "Modo matemático incorecto, se esperaba \"$\"\n", i, contarFilIndice(i), contarColIndice(i));
                         res.getErrores().add(info);
-                        i = codigo.length(); //Para salir del for
+                        return false;
                     }
-                    if (esPPeso(i)){
-                        InfoSintaxis info
-                                = new InfoSintaxis("$$", "Modo matemático incorecto, se esperaba \"$\"\n", i,
-                                        contarFilIndice(i), contarColIndice(i));
+                    if (esPPesoAt(i)) {
+                        InfoSintaxis info = new InfoSintaxis("$$", "Modo matemático incorecto, se esperaba \"$\"\n", i, contarFilIndice(i), contarColIndice(i));
                         res.getErrores().add(info);
-                        i = codigo.length(); //Para salir del for  
+                        return false;
+                    } else if (esPesoAt(i)) {
+                        estado = 0;
                     }
                     break;
                 case 2://$$
                     //Error de paridad
                     if (i == codigo.length() - 2) {
-                        InfoSintaxis info
-                                = new InfoSintaxis("$$", "Modo matemático incorecto, se esperaba \"$$\"\n", i - 1,
-                                        contarFilIndice(i - 1), contarColIndice(i - 1));
+                        InfoSintaxis info = new InfoSintaxis("$$", "Modo matemático incorecto, se esperaba \"$$\"", i, contarFilIndice(i), contarColIndice(i));
                         res.getErrores().add(info);
+                        return false;
                     }
 
-                    break;
-                case 3://error fin (paridad)
+                    if (esPesoAt(i)) {
+                        InfoSintaxis info = new InfoSintaxis("$", "Modo matemático incorecto, se esperaba \"$$\"", i, contarFilIndice(i), contarColIndice(i));
+                        res.getErrores().add(info);
+                        return false;
 
-                    break;
-                case 4: //se esperaba $ o $$
+                    } else if (esPPesoAt(i)) {
+                        estado = 0;
+                        i++;
+                    }
 
                     break;
             }
         }
         return true;
     }
-
 //-----------------------Utilidades---------------------------------------------
     private int contarColIndice(int i) {
         return contarColumnas(codigo.substring(0, i));
@@ -179,6 +183,9 @@ public final class Tokenizador {
 
     public boolean analizarCodigo() {
 
+        if(!validacionPrevia()) return false;
+        
+        
         return true;
     }
 
