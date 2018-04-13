@@ -85,41 +85,48 @@ public final class Tokenizador {
             res.getErrores().add(info);
             return false;
         }
+        int estado = 0, est_anterior = 0;
+        codigo.concat(" ");
+        for (int i = 0; i < codigo.length() - 1; i++) {
+            switch (estado) {
+                case 0: //Inicial
+                    if (i != codigo.length() - 2) {
 
-        boolean ini_simple = true, ini_doble = true;
+                    }
+                    break;
+                case 1: //$
+                    //Error de paridad
+                    if (i == codigo.length() - 2) {
+                        InfoSintaxis info
+                                = new InfoSintaxis("$", "Modo matemático incorecto, se esperaba \"$\"\n", i,
+                                        contarFilIndice(i), contarColIndice(i));
+                        res.getErrores().add(info);
+                        i = codigo.length(); //Para salir del for
+                    }
+                    if (esPPeso(i)){
+                        InfoSintaxis info
+                                = new InfoSintaxis("$$", "Modo matemático incorecto, se esperaba \"$\"\n", i,
+                                        contarFilIndice(i), contarColIndice(i));
+                        res.getErrores().add(info);
+                        i = codigo.length(); //Para salir del for  
+                    }
+                    break;
+                case 2://$$
+                    //Error de paridad
+                    if (i == codigo.length() - 2) {
+                        InfoSintaxis info
+                                = new InfoSintaxis("$$", "Modo matemático incorecto, se esperaba \"$$\"\n", i - 1,
+                                        contarFilIndice(i - 1), contarColIndice(i - 1));
+                        res.getErrores().add(info);
+                    }
 
-        for (int i = 0; i < codigo.length(); i++) {
-            if (i != codigo.length() - 1) {
-                if (codigo.charAt(i) == '$' && codigo.charAt(i + 1) != '$') {
-                    if (ini_simple && ini_doble) {
-                        ini_simple = false;
-                    }else{
-                        if(!ini_doble){
-                            //ERROR $$ ... $
-                        }
-                        else{
-                            ini_simple = true;
-                        }
-                    }
-                }
-                if (codigo.charAt(i) == '$' && codigo.charAt(i + 1) == '$') {
-                    if (ini_simple && ini_doble) {
-                        ini_doble = false;
-                    }else{
-                       if(!ini_simple){
-                           //Eror $...$$
-                       }else{
-                            ini_doble = true;
-                        }
-                    }
-                    i++; //Me salto el caracter $
-                }
-            } else {
-                    if(codigo.charAt(i) == '$'){
-                        if(!ini_doble){
-                            //Error $$....$/fin
-                        }
-                    }
+                    break;
+                case 3://error fin (paridad)
+
+                    break;
+                case 4: //se esperaba $ o $$
+
+                    break;
             }
         }
         return true;
@@ -161,7 +168,15 @@ public final class Tokenizador {
         return lineas;
     }
 
+    private boolean esPesoAt(int i) {
+        return codigo.charAt(i) == '$' && codigo.charAt(i + 1) != '$';
+    }
+
+    private boolean esPPesoAt(int i) {
+        return codigo.charAt(i) == '$' && codigo.charAt(i + 1) == '$';
+    }
 //---------------------Analisis lexico------------------------------------------
+
     public boolean analizarCodigo() {
 
         return true;
