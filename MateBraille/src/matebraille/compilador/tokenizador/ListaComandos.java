@@ -20,6 +20,7 @@ public final class ListaComandos {
      
      public ListaComandos(){
          //Cargo los comandos básicos.
+         //Aqui se debe cargar el XML llamando al parser
          nuevoCmd(new Comando("$", 0,Tipo.MODO_MATE));
          nuevoCmd(new Comando("$$", 0,Tipo.MODO_MATE_2));
          nuevoCmd(new Comando("{",0,Tipo.L_INI));
