@@ -28,6 +28,7 @@ public final class Tokenizador {
         this.listaCmd = listaCmd;
         this.codigo = codigo + "  ";
     }
+   
 
 //-----------------Validaciones previas a la tokenizacion-----------------------
     private boolean validacionPrevia() {
