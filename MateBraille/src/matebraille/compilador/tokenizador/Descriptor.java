@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package matebraille.archivos;
+package matebraille.compilador.tokenizador;
 
 /**
  *
  * @author franco
  */
-public class LectorArchivos {
+public class Descriptor {
     
 }

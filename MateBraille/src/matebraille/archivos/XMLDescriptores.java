@@ -9,6 +9,6 @@ package matebraille.archivos;
  *
  * @author franco
  */
-public class EscritorArchivos {
+public class XMLDescriptores {
     
 }

@@ -5,6 +5,7 @@
  */
 package matebraille.compilador.tokenizador;
 
+import matebraille.archivos.XMLComandos;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  */
 public final class Tokenizador {
 
-    private final ListaComandos listaCmd;
+    private final XMLComandos listaCmd;
     private final String codigo;
     private ResultadoTokenizador res;
 
@@ -24,7 +25,7 @@ public final class Tokenizador {
      * @param listaCmd Lista de comandos especiales "\nombre"
      * @param codigo Código a procesar.
      */
-    public Tokenizador(ListaComandos listaCmd, String codigo) {
+    public Tokenizador(XMLComandos listaCmd, String codigo) {
         this.listaCmd = listaCmd;
         this.codigo = codigo + "  ";
     }

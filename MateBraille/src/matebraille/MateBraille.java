@@ -5,7 +5,7 @@
  */
 package matebraille;
 
-import matebraille.compilador.tokenizador.ListaComandos;
+import matebraille.archivos.XMLComandos;
 import matebraille.compilador.tokenizador.Tokenizador;
 
 /**

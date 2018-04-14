@@ -3,22 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package matebraille.compilador.tokenizador;
+package matebraille.archivos;
 
 import java.util.ArrayList;
+import matebraille.compilador.tokenizador.Comando;
+import matebraille.compilador.tokenizador.Tipo;
 
 /**
  *
  * @author franco
  */
-public final class ListaComandos {
+public final class XMLComandos {
      private final ArrayList<Comando> listaCmd = new ArrayList<>();
      /**
       * Inicializa la lista de comandos, necesario, puesto que después
       * serán obtenidos desde archivo.
       */
      
-     public ListaComandos(){
+     public XMLComandos(){
          //Cargo los comandos básicos.
          //Aqui se debe cargar el XML llamando al parser
          nuevoCmd(new Comando("$", 0,Tipo.MODO_MATE));
