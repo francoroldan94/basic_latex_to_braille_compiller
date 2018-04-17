@@ -7,6 +7,7 @@ package matebraille.compilador.tokenizador;
 
 import matebraille.archivos.XMLComandos;
 import java.util.ArrayList;
+import matebraille.archivos.XMLDescriptores;
 
 /**
  *
@@ -15,8 +16,9 @@ import java.util.ArrayList;
  */
 public final class Tokenizador {
 
-    private final XMLComandos listaCmd;
-    private final String codigo;
+    private static XMLComandos listaCmd;
+    private static XMLDescriptores listaDesc;
+    private  String codigo = "";
     private ResultadoTokenizador res;
 
     /**
@@ -25,8 +27,11 @@ public final class Tokenizador {
      * @param listaCmd Lista de comandos especiales "\nombre"
      * @param codigo Código a procesar.
      */
-    public Tokenizador(XMLComandos listaCmd, String codigo) {
+    public Tokenizador(XMLComandos listaCmd,XMLDescriptores listaDesc, String codigo) {
         this.listaCmd = listaCmd;
+        this.listaDesc = listaDesc;
+        //Se le añaden dos espacios para que funcione el algoritmo de deteccion
+        //De modos matemáticos correctos.
         this.codigo = codigo + "  ";
     }
 
@@ -52,12 +57,8 @@ public final class Tokenizador {
      */
     private boolean NoVacio() {
         if (codigo.equals("  ")) {
-            InfoSintaxis info = new InfoSintaxis();
-            info.setInformación("Código vacío.");
-            info.setColumna(0);
-            info.setFila(0);
-            info.setContenido("");
-            res.getErrores().add(info);
+            InfoSintaxis info = crearInfoSintaxis("codigo vacio",0);
+            res.nuevoError(info);
             return false;
         }
 
@@ -75,14 +76,9 @@ public final class Tokenizador {
         int pos;
         pos = codigo.indexOf("$$$", 0);
         if (codigo.indexOf("$$$", 0) != -1) {
-            InfoSintaxis info = new InfoSintaxis();
+            InfoSintaxis info = crearInfoSintaxis("triada de $",pos);
             //Informe del error. Esto debe ser de rutina en todo error.
-            info.setFila(contarFilas(codigo.substring(0, pos)));
-            info.setColumna(contarColumnas(codigo.substring(0, pos)));
-            info.setContenido("$$$");
-            info.setInformación("Error: Se ha introducido \"$$$\", lo cual es incogruente. \nSe debe separar la tríada.");
-            info.setPosicion(pos);
-            res.getErrores().add(info);
+            res.nuevoError(info);
             return false;
         }
      
@@ -102,13 +98,14 @@ public final class Tokenizador {
                 case 1: //$
                     //Error de paridad
                     if (i == codigo.length() - 2) {
-                        InfoSintaxis info = new InfoSintaxis("$", "Modo matemático incorecto, se esperaba \"$\"\n", i, contarFilIndice(i), contarColIndice(i));
-                        res.getErrores().add(info);
+                        InfoSintaxis info = crearInfoSintaxis("$ extra", i-1);
+                        res.nuevoError(info);
                         return false;
                     }
+                    //Error $...$$
                     if (esPPesoAt(i)) {
-                        InfoSintaxis info = new InfoSintaxis("$$", "Modo matemático incorecto, se esperaba \"$\"\n", i, contarFilIndice(i), contarColIndice(i));
-                        res.getErrores().add(info);
+                        InfoSintaxis info = crearInfoSintaxis("$...$$", i);
+                        res.nuevoError(info);
                         return false;
                     } else if (esPesoAt(i)) {
                         estado = 0;
@@ -117,14 +114,14 @@ public final class Tokenizador {
                 case 2://$$
                     //Error de paridad
                     if (i == codigo.length() - 2) {
-                        InfoSintaxis info = new InfoSintaxis("$$", "Modo matemático incorecto, se esperaba \"$$\"", i, contarFilIndice(i), contarColIndice(i));
-                        res.getErrores().add(info);
+                        InfoSintaxis info = crearInfoSintaxis("$$ extra",i-2);
+                        res.nuevoError(info);
                         return false;
                     }
 
                     if (esPesoAt(i)) {
-                        InfoSintaxis info = new InfoSintaxis("$", "Modo matemático incorecto, se esperaba \"$$\"", i, contarFilIndice(i), contarColIndice(i));
-                        res.getErrores().add(info);
+                        InfoSintaxis info = crearInfoSintaxis("$$...$",i);
+                        res.nuevoError(info);
                         return false;
 
                     } else if (esPPesoAt(i)) {
@@ -138,11 +135,14 @@ public final class Tokenizador {
         return true;
     }
 //-----------------------Utilidades---------------------------------------------
-    private int contarColIndice(int i) {
+    private InfoSintaxis crearInfoSintaxis(String id,int pos){
+        return new InfoSintaxis(listaDesc.hallarPorId("triada de $"),pos,filasEnPos(pos), columnasEnPos(pos));
+    }
+    private int filasEnPos(int i) {
         return contarColumnas(codigo.substring(0, i));
     }
 
-    private int contarFilIndice(int i) {
+    private int columnasEnPos(int i) {
         return contarFilas(codigo.substring(0, i));
     }
 

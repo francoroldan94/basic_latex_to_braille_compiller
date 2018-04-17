@@ -22,7 +22,7 @@ public class InfoSintaxis {
      * @param fila
      * @param columna
      */
-    public InfoSintaxis(Descriptor descriptor){
+    public InfoSintaxis(Descriptor descriptor,int posicion, int fila, int columna){
         this.descriptor = descriptor;
         this.posicion = posicion;
         this.fila = fila;

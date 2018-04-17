@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+No modificar los ID's de los descriptores.
+Puesto que implicaría un error crítico en el
+Código fuente, dado que se usan para acceder a los
+Correspondientes errores.
+-->
+
+
+<root>
+    <error>
+        <id>codigo vacio</id>
+        <contenido></contenido>
+        <descripcion>El código fuente está vacío.</descripcion>
+    </error>
+    <error>
+        <id>triada de $</id>
+        <contenido>$$$</contenido>
+        <descripcion>No se admiten más de dos signos "$" juntos.</descripcion>
+    </error>
+    <error>
+        <id>$ extra</id>
+        <contenido>$</contenido>
+        <descripcion>El signo "$" está demás.</descripcion>
+    </error>
+    <error>
+        <id>$...$$</id>
+        <contenido>$$</contenido>
+        <descripcion>Se esperaba "$" y se introdujo "$$".</descripcion>
+    </error>
+    <error>
+        <id>$$ extra</id>
+        <contenido>$$</contenido>
+        <descripcion>El signo "$$" está demás.</descripcion>
+    </error>
+        <error>
+        <id>$$...$</id>
+        <contenido>$</contenido>
+        <descripcion>Se esperaba "$$" y se introdujo "$".</descripcion>
+    </error>
+</root>

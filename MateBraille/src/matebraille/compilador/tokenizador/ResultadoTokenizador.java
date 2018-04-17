@@ -46,5 +46,10 @@ public class ResultadoTokenizador {
     public ArrayList<InfoSintaxis> getAdvertencias() {
         return advertencias;
     }
-    
+    public void nuevoError(InfoSintaxis info){
+        errores.add(info);
+    }
+    public void nuevaAdvertencia(InfoSintaxis info){
+        advertencias.add(info);
+    }
 }
