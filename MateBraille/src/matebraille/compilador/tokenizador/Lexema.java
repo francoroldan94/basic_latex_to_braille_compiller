@@ -40,6 +40,10 @@ public class Lexema {
         Lexema lexema = new Lexema(null,TipoLexema.SIGNO,valor,posicion);
         return lexema;
     }
+        public static Lexema nuevoLexemaNoMatematico(String valor, int posicion) {
+        Lexema lexema = new Lexema(null,TipoLexema.NOMATEMATICO,valor,posicion);
+        return lexema;
+    }
 ///////////////////////GETTERS//////////////////////////////////////////////////
     public Comando getCmd() {
         return cmd; 

@@ -10,7 +10,7 @@ import matebraille.compilador.tokenizador.Comando;
 import matebraille.compilador.tokenizador.TipoCmd;
 
 /**
- *
+ *SI EL CONTENIDO ES VARIABLE DEJAR EL CONTENIDO COMO ETIQUETA VACIA <CONTENIDO></CONTENIDO>
  * @author franco
  */
 public final class XMLComandos {

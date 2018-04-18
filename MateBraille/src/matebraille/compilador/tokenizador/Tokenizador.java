@@ -64,9 +64,7 @@ public final class Tokenizador {
      *
      * @return
      */
-    public enum estMMat {
-        NORMAL, SIMPLE, DOBLE
-    };
+    public enum estMMat {NORMAL, SIMPLE, DOBLE};
 
     @SuppressWarnings("empty-statement")
     private boolean modoMatematicoCorrecto() {
@@ -136,9 +134,11 @@ public final class Tokenizador {
 //-----------------------Utilidades---------------------------------------------
 
     private InfoSintaxis crearInfoSintaxis(String id, int pos) {
-        return new InfoSintaxis(listaDesc.hallarPorId("triada de $"), pos, filasEnPos(pos), columnasEnPos(pos));
+        return new InfoSintaxis(listaDesc.hallarPorId(id), pos, filasEnPos(pos), columnasEnPos(pos));
     }
-
+    private InfoSintaxis crearInfoSintaxis(String id,String contVariable, int pos) {
+        return new InfoSintaxis(listaDesc.hallarPorId(id),contVariable, pos, filasEnPos(pos), columnasEnPos(pos));
+    }
     private int filasEnPos(int i) {
         return contarColumnas(codigo.substring(0, i));
     }
@@ -184,60 +184,174 @@ public final class Tokenizador {
 //---------------------Analisis lexico------------------------------------------
 
     private enum estLex {
-        INICIO, CMD, NUM, CARACT
+        NORMAL, INICIO, CMD, NUM, CARACT
     };
 
     public boolean analizarCodigo() {
         if (!validacionPrevia()) {
             return false;
         } else {
+
             estLex estado = estLex.INICIO;
+            StringBuilder contenido = new StringBuilder();
             for (int i = 0; i < codigo.length(); i++) {
                 switch (estado) {
+                    case NORMAL:
+                        estado = lexNormal(i, contenido);
+                        break;
                     case INICIO:
-                        estado = lexInicio(i);
+                        estado = lexInicio(i, contenido);
                         break;
                     case CMD:
-                        estado = lexCmd(i);
+                        estado = lexCmd(i, contenido);
                         break;
                     case NUM:
-                        estado = lexNum(i);
+                        estado = lexNum(i, contenido);
                         break;
                     case CARACT:
-                        estado = lexCaract(i);
+                        estado = lexCaract(i, contenido);
                         break;
                 }
+                //Esto porque no se programó correción de errores, ni modo ṕanico, ni análisis global.
+                if(estado == null) return false;
             }
         }
 
         return true;
     }
 ///////////////ESTADOS DE PROCESAMIENTO/////////////////////////////////////////
-//    private estLex lexInicio(int i) {
-//    private estLex lexInicio(int i) {
-//        if(CaracterEspecial(i)){
-//            return estLex.INICIO;
-//        }
-//        
-//    }
-//
-//    private estLex lexCmd(int i) {
-//
-//    }
-//
-//    private estLex lexNum(int i) {
-//
-//    }
-//
-//    private estLex lexCaract(int i) {
-//
-//    }
-//////////////////////////HERRAMIENTAS DE PROCESAMIENTO///////////////////////////
-//    private boolean CaracterEspecial(i){
-//        char c = codigo.charAt(i);
-//        if()
-//    }
+
+    private estLex lexNormal(int i, StringBuilder contenido) {
+        char caracter = codigo.charAt(i);
+        if (esPPesoAt(i)) {
+            if (contenido.length() != 0) {
+                Lexema lex = Lexema.nuevoLexemaNoMatematico(contenido.toString(), i);
+                res.nuevoLexema(lex); //Carga el lexema a la base de datos
+                contenido.setLength(0); //Vacía el contenido acumulado.
+            }
+            res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("$$"), i));
+            i++; //Salta un signo $
+            return estLex.INICIO;
+        }
+        
+        if(esPesoAt(i)){
+            if (contenido.length() != 0) {
+                Lexema lex = Lexema.nuevoLexemaNoMatematico(contenido.toString(), i);
+                res.nuevoLexema(lex); //Carga el lexema a la base de datos
+                contenido.setLength(0); //Vacía el contenido acumulado.
+            }
+            res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("$"), i));
+            return estLex.INICIO;
+        }
+        
+        //Fin del archivo
+        if(i == codigo.length()-2){
+            if (contenido.length() != 0) {
+                res.nuevoLexema(Lexema.nuevoLexemaNoMatematico(contenido.toString(), i)); //Carga el lexema a la base de datos
+                contenido.setLength(0); //Vacía el contenido acumulado.
+            }
+            i = codigo.length(); //Esto hace que termine el análisis.
+            return estLex.NORMAL;
+        }
+        //Sin criterio de parada simplemente recolecta otro caracter, puesto que está fuera del modo matemático.
+        contenido.append(caracter);
+        return estLex.NORMAL;
+    }
+
+    private estLex lexInicio(int i, StringBuilder contenido) {
+        char caracter = codigo.charAt(i);
+        if (esPPesoAt(i)) {
+            res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("$$"), i));
+            i++; //Salta un signo $
+            
+            return estLex.NORMAL;
+        }
+        
+        if(esPesoAt(i)){
+            res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("$"), i));
+            return estLex.NORMAL;
+        }
+        if (esCaracterEspecial(i)) {
+            switch (codigo.charAt(i)) {
+                case '\\':
+                    contenido.setLength(0);  //Vaciamos el contenido 
+                    contenido.append('\\'); //Se añade slash
+                    return estLex.CMD; //Se inicia el modo comando
+                case '{':
+                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("{"), i));
+                    break;
+                case '}':
+                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("}"), i));
+                    break;
+                case '(':
+                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("("), i));
+                    break;
+                case ')':
+                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd(")"), i));
+                    break;
+                case '[':
+                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("["), i));
+                    break;
+                case ']':
+                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("]"), i));
+                    break;            
+                default:
+                    res.nuevoLexema(Lexema.nuevoLexemaSigno(Character.toString(caracter), i));
+                    break;
+            }
+        }
+        
+        if(Character.isDigit(caracter)){
+            contenido.setLength(0);
+            contenido.append(caracter);
+            return estLex.NUM;
+        }
+        if(Character.isAlphabetic(caracter)){
+            contenido.setLength(0);
+            contenido.append(caracter);
+            return estLex.CARACT;
+        }
+
+        return estLex.INICIO;
+    }
+
+    private estLex lexCmd(int i, StringBuilder contenido) {
+        char caracter = codigo.charAt(i);
+        // ¿SE ADMITEN NÚMEROS EN LOS IDENTIFICADORES?
+        if(Character.isAlphabetic(caracter)){
+            contenido.append(caracter);
+        }
+        else{
+            if(listaCmd.getCmd(contenido.toString()) == null){
+                res.nuevoError(crearInfoSintaxis("cmd desconocido",contenido.toString(),i-contenido.length()));
+                contenido.setLength(0);
+                return null; //ESTO ES PROVISORIO, PUESTO QUE HAY QUE PROGRAMAR DETECCIÓN DE FALLOS.
+            }else{
+                res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd(contenido.toString()), i-contenido.length()));
+                contenido.setLength(0);
+                i--; //Se resta un elemento, para que en la próxima iteración el inicio compute el caracter
+                 //No alfabético actual como corresponda
+            }
+        }
+        
+        return estLex.INICIO;
+    }
+
+    private estLex lexNum(int i, StringBuilder contenido) {
+        return estLex.INICIO;
+    }
+
+    private estLex lexCaract(int i, StringBuilder contenido) {
+        return estLex.INICIO;
+    }
+////////////////////////HERRAMIENTAS DE PROCESAMIENTO///////////////////////////
+
+    private boolean esCaracterEspecial(int i) {
+        char c = codigo.charAt(i);
+        return !Character.isAlphabetic(c) && !Character.isDigit(c);
+    }
 /////////////////RESULTADO//////////////////////////////////////////////////////
+
     public ResultadoTokenizador getRes() {
         return res;
     }

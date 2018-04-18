@@ -52,4 +52,7 @@ public class ResultadoTokenizador {
     public void nuevaAdvertencia(InfoSintaxis info){
         advertencias.add(info);
     }
+    public void nuevoLexema(Lexema lexema){
+        lexemas.add(lexema);
+    }
 }

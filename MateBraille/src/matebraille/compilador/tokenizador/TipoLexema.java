@@ -13,5 +13,6 @@ public enum TipoLexema {
     ALFABETICO,
     LATEX,
     NUMERICO,
-    SIGNO
+    SIGNO,
+    NOMATEMATICO
 }

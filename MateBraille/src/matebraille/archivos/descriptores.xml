@@ -33,9 +33,16 @@ Correspondientes errores.
         <contenido>$$</contenido>
         <descripcion>El signo "$$" está demás.</descripcion>
     </error>
-        <error>
+    <error>
         <id>$$...$</id>
         <contenido>$</contenido>
         <descripcion>Se esperaba "$$" y se introdujo "$".</descripcion>
     </error>
+
+    <error>
+        <id>cmd desconocido</id>
+        <contenido></contenido>
+        <descripcion>Se introdujo un comando desconocido.</descripcion>
+    </error>
+    
 </root>

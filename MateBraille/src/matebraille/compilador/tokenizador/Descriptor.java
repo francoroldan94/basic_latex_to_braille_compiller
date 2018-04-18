@@ -10,7 +10,7 @@ package matebraille.compilador.tokenizador;
  * @author franco
  */
 public class Descriptor {
-    private String contenido,descripcion,id;
+    protected String contenido,descripcion,id;
 
     public Descriptor(String id, String contenido, String descripcion) {
         this.contenido = contenido;

@@ -13,6 +13,7 @@ public class InfoSintaxis {
 
     private int posicion = -1, fila = 0, columna = 0;
     private Descriptor descriptor;
+    private String contenidoVariable;
 
     /**
      *
@@ -22,11 +23,19 @@ public class InfoSintaxis {
      * @param fila
      * @param columna
      */
-    public InfoSintaxis(Descriptor descriptor,int posicion, int fila, int columna){
+    public InfoSintaxis(Descriptor descriptor, int posicion, int fila, int columna) {
         this.descriptor = descriptor;
         this.posicion = posicion;
         this.fila = fila;
-        this.columna = columna; 
+        this.columna = columna;
+    }
+
+    public InfoSintaxis(Descriptor descriptor, String contVariable, int posicion, int fila, int columna) {
+        this.descriptor = descriptor;
+        this.contenidoVariable = contVariable;
+        this.posicion = posicion;
+        this.fila = fila;
+        this.columna = columna;
     }
 
     public int getPosicion() {
@@ -44,7 +53,13 @@ public class InfoSintaxis {
     public Descriptor getDescriptor() {
         return descriptor;
     }
-    
 
+    public String getContenido() {
+        if (descriptor.contenido == "") {
+            return contenidoVariable;
+        } else {
+            return descriptor.contenido;
+        }
+    }
 
 }
