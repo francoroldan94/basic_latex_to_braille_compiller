@@ -27,7 +27,18 @@ public final class XMLComandos {
          nuevoCmd(new Comando("$$", 0,TipoCmd.MODO_MATE_2));
          nuevoCmd(new Comando("{",0,TipoCmd.L_INI));
          nuevoCmd(new Comando("}",0,TipoCmd.L_FIN));
+         nuevoCmd(new Comando(")",0,TipoCmd.SIMB));
+         nuevoCmd(new Comando("(",0,TipoCmd.SIMB));
+         nuevoCmd(new Comando("[",0,TipoCmd.CORCH_INI));
+         nuevoCmd(new Comando("[",0,TipoCmd.CORCH_FIN));
+         nuevoCmd(new Comando("_",0,TipoCmd.SUB));
+         nuevoCmd(new Comando("^",0,TipoCmd.SUPRA));
          nuevoCmd(new Comando("\\alpha",0,TipoCmd.SIMB));
+         nuevoCmd(new Comando("\\sum",0,TipoCmd.SIMB));
+         nuevoCmd(new Comando("\\alpha",0,TipoCmd.SIMB));
+         nuevoCmd(new Comando("\\infty",0,TipoCmd.SIMB));
+          nuevoCmd(new Comando("\\left",0,TipoCmd.SIMB));
+           nuevoCmd(new Comando("\\left(",0,TipoCmd.SIMB));
      }
      
     /**

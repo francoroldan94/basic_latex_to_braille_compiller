@@ -6,41 +6,47 @@
 package matebraille.compilador.tokenizador;
 
 /**
- * @author franco
- * Tipos de lexemas
+ * @author franco Tipos de lexemas
  */
 public enum TipoCmd {
     /**
-     *Comando prefijo. Por ejemplo "\frac".
+     * Comando prefijo. Por ejemplo "\frac".
      */
     PREFIJO,
-
     /**
-     *Comando infijo. Por ejemplo "\choose".
+     * Comando infijo. Por ejemplo "\choose".
      */
     INFIJO,
-    
     /**
-     *Llave apertura.
+     * Llave apertura.
      */
     L_INI,
-
     /**
      * Llave cierre.
      */
     L_FIN,
-
     /**
      * Simbolos como por ejemplo "\pi"
      */
     SIMB,
-    
     /**
      * Signo "$"
      */
-    MODO_MATE, 
+    MODO_MATE,
     /**
      * Signo "$$"
      */
-    MODO_MATE_2
+    MODO_MATE_2,
+    /**
+     * Corchete [
+     */
+    CORCH_INI,
+    /**
+     * Corchete ]
+     */
+    CORCH_FIN,
+    
+    SUB,
+    
+    SUPRA
 }

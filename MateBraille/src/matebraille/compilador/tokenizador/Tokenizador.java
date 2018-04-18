@@ -264,7 +264,7 @@ public final class Tokenizador {
         //Fin del archivo
         if (i == codigo.length() - 2) {
             if (contenido.length() != 0) {
-                res.nuevoLexema(Lexema.nuevoLexemaNoMatematico(contenido.toString(), i-contenido.length())); //Carga el lexema a la base de datos
+                res.nuevoLexema(Lexema.nuevoLexemaNoMatematico(contenido.toString(), i - contenido.length())); //Carga el lexema a la base de datos
                 contenido.setLength(0); //Vacía el contenido acumulado.
             }
             ret.i = codigo.length(); //Esto hace que termine el análisis.
@@ -295,33 +295,16 @@ public final class Tokenizador {
             return ret;
         }
         if (esCaracterEspecial(i)) {
-            switch (codigo.charAt(i)) {
-                case '\\':
-                    contenido.setLength(0);  //Vaciamos el contenido 
-                    contenido.append('\\'); //Se añade slash
-                    ret.estado = estLex.CMD; //Se inicia el modo comando
-                    return ret;
-                case '{':
-                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("{"), i));
-                    break;
-                case '}':
-                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("}"), i));
-                    break;
-                case '(':
-                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("("), i));
-                    break;
-                case ')':
-                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd(")"), i));
-                    break;
-                case '[':
-                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("["), i));
-                    break;
-                case ']':
-                    res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("]"), i));
-                    break;
-                default:
-                    res.nuevoLexema(Lexema.nuevoLexemaSigno(Character.toString(caracter), i));
-                    break;
+            if (codigo.charAt(i) == '\\') {
+                contenido.setLength(0);  //Vaciamos el contenido 
+                contenido.append('\\'); //Se añade slash
+                ret.estado = estLex.CMD; //Se inicia el modo comando
+                return ret;
+
+            } else if (listaCmd.getCmd(Character.toString(codigo.charAt(i))) != null) {
+                res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd(Character.toString(codigo.charAt(i))), i));
+            } else {
+                res.nuevoLexema(Lexema.nuevoLexemaSigno(Character.toString(caracter), i));
             }
         }
 
@@ -346,24 +329,53 @@ public final class Tokenizador {
         char caracter = codigo.charAt(i);
         Retorno ret = new Retorno();
         ret.i = i;
+
         // ¿SE ADMITEN NÚMEROS EN LOS IDENTIFICADORES?
         if (Character.isAlphabetic(caracter)) {
             contenido.append(caracter);
             ret.estado = estLex.CMD;
             return ret;
         } else {
-            if (listaCmd.getCmd(contenido.toString()) == null) {
-                res.nuevoError(crearInfoSintaxis("cmd desconocido", contenido.toString(), i - contenido.length()));
-                contenido.setLength(0);
-                return null; //ESTO ES PROVISORIO, PUESTO QUE HAY QUE PROGRAMAR DETECCIÓN DE FALLOS.
+            Comando cmd;
+            boolean extendido;
+            if (caracter == ' ' || Character.isDigit(caracter)) {
+                cmd = listaCmd.getCmd(contenido.toString());
+                extendido = false;
             } else {
-                res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd(contenido.toString()), i - contenido.length()));
+                extendido = true;
+                cmd = listaCmd.getCmd(contenido.toString() + caracter);
+            }
+            
+            if (cmd != null) {
+                res.nuevoLexema(Lexema.nuevoLexemaCmd(cmd, i - contenido.length()));
                 contenido.setLength(0);
-                ret.i--; //Se resta un elemento, para que en la próxima iteración el inicio compute el caracter
-                //No alfabético actual como corresponda
+                ret.estado = estLex.INICIO;
+                if (!extendido) {
+                    ret.i--;
+                }
+                return ret;
+            } 
+            else {
+                if (extendido) {
+                    cmd = listaCmd.getCmd(contenido.toString());
+                    if (cmd != null) {
+                            res.nuevoLexema(Lexema.nuevoLexemaCmd(cmd, i - contenido.length()));
+                contenido.setLength(0);
                 ret.estado = estLex.INICIO;
                 return ret;
+                    }
+                if (!extendido) {
+                    ret.i--;
+                }
+                return ret;
+                    } else {
+                        res.nuevoError(crearInfoSintaxis("cmd desconocido", contenido.toString(), i - contenido.length()));
+                        contenido.setLength(0);
+                        return null;
+                    }
+                }
             }
+
         }
 
     }
@@ -394,7 +406,7 @@ public final class Tokenizador {
             contenido.append(caracter);
             ret.estado = estLex.CARACT;
             return ret;
-            
+
         } else {
             ret.i--;
             res.nuevoLexema(Lexema.nuevoLexemaAlfabetico(contenido.toString(), i - contenido.length()));
