@@ -33,7 +33,7 @@ public class Lexema {
         return lexema;
     }
     public static Lexema nuevoLexemaCmd(Comando cmd, int posicion) {
-        Lexema lexema = new Lexema(cmd,TipoLexema.NUMERICO,null,posicion);
+        Lexema lexema = new Lexema(cmd,TipoLexema.LATEX,null,posicion);
         return lexema;
     }
     public static Lexema nuevoLexemaSigno(String valor, int posicion) {

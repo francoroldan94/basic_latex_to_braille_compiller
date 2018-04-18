@@ -10,7 +10,7 @@ package matebraille.compilador.tokenizador;
  * @author franco
  */
 public class Comando {
-    private String literal;
+    private String literal = "";
     private int aridad = 0;
     private TipoCmd tipo = TipoCmd.SIMB;
     /**
@@ -38,7 +38,7 @@ public class Comando {
      * @return
      */
     public String getLiteral() {
-        return literal;
+        return this.literal;
     }
 
     /**

@@ -14,7 +14,7 @@ import matebraille.compilador.tokenizador.TipoCmd;
  * @author franco
  */
 public final class XMLComandos {
-     private final ArrayList<Comando> listaCmd = new ArrayList<>();
+     private  ArrayList<Comando> listaCmd = new ArrayList<>();
      /**
       * Inicializa la lista de comandos, necesario, puesto que después
       * serán obtenidos desde archivo.
@@ -27,6 +27,7 @@ public final class XMLComandos {
          nuevoCmd(new Comando("$$", 0,TipoCmd.MODO_MATE_2));
          nuevoCmd(new Comando("{",0,TipoCmd.L_INI));
          nuevoCmd(new Comando("}",0,TipoCmd.L_FIN));
+         nuevoCmd(new Comando("\\alpha",0,TipoCmd.SIMB));
      }
      
     /**

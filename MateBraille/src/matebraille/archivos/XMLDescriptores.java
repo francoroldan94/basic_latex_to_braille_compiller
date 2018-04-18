@@ -16,6 +16,10 @@ public class XMLDescriptores {
 
     private ArrayList<Descriptor> descriptores;
 
+    public XMLDescriptores() {
+        
+    }
+
     public Descriptor hallarPorId(String id) {
         for (int i = 0; i < descriptores.size(); i++) {
             if (descriptores.get(i).getId().equals(id)) {

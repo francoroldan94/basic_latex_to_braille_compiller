@@ -240,11 +240,11 @@ public final class Tokenizador {
         ret.i = i;
         if (esPPesoAt(i)) {
             if (contenido.length() != 0) {
-                Lexema lex = Lexema.nuevoLexemaNoMatematico(contenido.toString(), i);
+                Lexema lex = Lexema.nuevoLexemaNoMatematico(contenido.toString(), i - contenido.length());
                 res.nuevoLexema(lex); //Carga el lexema a la base de datos
                 contenido.setLength(0); //Vacía el contenido acumulado.
             }
-            res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("$$"), i));
+            res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("$$"), i - contenido.length()));
             ret.i++; //Salta un signo $
             ret.estado = estLex.INICIO;
             return ret;
@@ -252,7 +252,7 @@ public final class Tokenizador {
 
         if (esPesoAt(i)) {
             if (contenido.length() != 0) {
-                Lexema lex = Lexema.nuevoLexemaNoMatematico(contenido.toString(), i);
+                Lexema lex = Lexema.nuevoLexemaNoMatematico(contenido.toString(), i - contenido.length());
                 res.nuevoLexema(lex); //Carga el lexema a la base de datos
                 contenido.setLength(0); //Vacía el contenido acumulado.
             }
@@ -264,7 +264,7 @@ public final class Tokenizador {
         //Fin del archivo
         if (i == codigo.length() - 2) {
             if (contenido.length() != 0) {
-                res.nuevoLexema(Lexema.nuevoLexemaNoMatematico(contenido.toString(), i)); //Carga el lexema a la base de datos
+                res.nuevoLexema(Lexema.nuevoLexemaNoMatematico(contenido.toString(), i-contenido.length())); //Carga el lexema a la base de datos
                 contenido.setLength(0); //Vacía el contenido acumulado.
             }
             ret.i = codigo.length(); //Esto hace que termine el análisis.
@@ -285,7 +285,7 @@ public final class Tokenizador {
             res.nuevoLexema(Lexema.nuevoLexemaCmd(listaCmd.getCmd("$$"), i));
             ret.i++; //Salta un signo $
 
-            ret.estado =  estLex.NORMAL;
+            ret.estado = estLex.NORMAL;
             return ret;
         }
 
@@ -344,7 +344,7 @@ public final class Tokenizador {
 
     private Retorno lexCmd(int i, StringBuilder contenido) {
         char caracter = codigo.charAt(i);
-        Retorno ret =new Retorno();
+        Retorno ret = new Retorno();
         ret.i = i;
         // ¿SE ADMITEN NÚMEROS EN LOS IDENTIFICADORES?
         if (Character.isAlphabetic(caracter)) {
@@ -361,7 +361,7 @@ public final class Tokenizador {
                 contenido.setLength(0);
                 ret.i--; //Se resta un elemento, para que en la próxima iteración el inicio compute el caracter
                 //No alfabético actual como corresponda
-                ret.estado =  estLex.INICIO;
+                ret.estado = estLex.INICIO;
                 return ret;
             }
         }
@@ -372,30 +372,36 @@ public final class Tokenizador {
         char caracter = codigo.charAt(i);
         Retorno ret = new Retorno();
         ret.i = i;
-        if (Character.isDigit(i)) {
+        if (Character.isDigit(caracter)) {
             contenido.append(caracter);
+            ret.estado = estLex.NUM;
+            return ret;
         } else {
             ret.i--;
-            res.nuevoLexema(Lexema.nuevoLexemaNumerico(contenido.toString(), i-contenido.length()));
+            res.nuevoLexema(Lexema.nuevoLexemaNumerico(contenido.toString(), i - contenido.length()));
             contenido.setLength(0);
+            ret.estado = estLex.INICIO;
+            return ret;
         }
-        ret.estado = estLex.INICIO;
-        return ret;
+
     }
 
     private Retorno lexCaract(int i, StringBuilder contenido) {
         char caracter = codigo.charAt(i);
         Retorno ret = new Retorno();
         ret.i = i;
-        if (Character.isAlphabetic(i)) {
+        if (Character.isAlphabetic(caracter)) {
             contenido.append(caracter);
+            ret.estado = estLex.CARACT;
+            return ret;
+            
         } else {
             ret.i--;
-            res.nuevoLexema(Lexema.nuevoLexemaAlfabetico(contenido.toString(), i-contenido.length()));
+            res.nuevoLexema(Lexema.nuevoLexemaAlfabetico(contenido.toString(), i - contenido.length()));
             contenido.setLength(0);
+            ret.estado = estLex.INICIO;
+            return ret;
         }
-        ret.estado = estLex.INICIO;
-        return ret;
     }
 ////////////////////////HERRAMIENTAS DE PROCESAMIENTO///////////////////////////
 
