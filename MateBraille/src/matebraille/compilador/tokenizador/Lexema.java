@@ -10,63 +10,51 @@ package matebraille.compilador.tokenizador;
  * @author franco
  */
 public class Lexema {
+
     private Comando cmd = null;
-    private boolean esCmd = false;
+    private TipoLexema tipo = TipoLexema.ALFABETICO;
     private String valor = null;
     private int posicion;
-    /**
-     * Declaración de lexema como una cadena de caracteres.
-     * @param contenido Valor literal del lexema.
-     * @param posicion Posición en el archivo a compilar.
-     */
-    public Lexema(String contenido, int posicion){
-        this.valor = contenido;
-        this.posicion = posicion;
-    }
-    /**
-     * Declaración del lexema como un comando predefinido en la lista de comandos.
-     * @param cmd Tipo de comando.
-     * @param posicion Posición en el archivo a compilar.
-     */
-    public Lexema(Comando cmd, int posicion){
-        this.posicion = posicion;
-        esCmd = true;
+////////////////////CONSTRUCTOR DE LEXEMAS PRIVADO (PARA FABRICAS)/////////////
+    private Lexema(Comando cmd, TipoLexema tipo, String valor, int posicion) {
         this.cmd = cmd;
+        this.tipo = tipo;
+        this.valor = valor;
+        this.posicion = posicion;
     }
-
-    /**
-     *
-     * @return
-     */
+    
+///////////////////METODOS FÁBRICA DE LEXEMAS//////////////////////////////////
+    public static Lexema nuevoLexemaAlfabetico(String valor, int posicion) {
+        Lexema lexema = new Lexema(null,TipoLexema.ALFABETICO,valor,posicion);
+        return lexema;
+    }
+    public static Lexema nuevoLexemaNumerico(String valor, int posicion) {
+        Lexema lexema = new Lexema(null,TipoLexema.NUMERICO,valor,posicion);
+        return lexema;
+    }
+    public static Lexema nuevoLexemaCmd(Comando cmd, int posicion) {
+        Lexema lexema = new Lexema(cmd,TipoLexema.NUMERICO,null,posicion);
+        return lexema;
+    }
+    public static Lexema nuevoLexemaSigno(String valor, int posicion) {
+        Lexema lexema = new Lexema(null,TipoLexema.SIGNO,valor,posicion);
+        return lexema;
+    }
+///////////////////////GETTERS//////////////////////////////////////////////////
     public Comando getCmd() {
-        return cmd;
+        return cmd; 
     }
 
-    /**
-     *
-     * @return
-     */
-    public boolean isEsCmd() {
-        return esCmd;
+    public TipoLexema getTipo() {
+        return tipo;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getValor() {
-        if(this.esCmd){
+        if(this.tipo == TipoLexema.LATEX)
             return cmd.getLiteral();
-        }
-        else{
-            return valor;
-        }
+        return this.valor;
     }
 
-    /**
-     *
-     * @return
-     */
     public int getPosicion() {
         return posicion;
     }

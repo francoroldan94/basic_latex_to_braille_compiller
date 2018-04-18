@@ -18,7 +18,7 @@ public final class Tokenizador {
 
     private static XMLComandos listaCmd;
     private static XMLDescriptores listaDesc;
-    private  String codigo = "";
+    private String codigo = "";
     private ResultadoTokenizador res;
 
     /**
@@ -27,7 +27,7 @@ public final class Tokenizador {
      * @param listaCmd Lista de comandos especiales "\nombre"
      * @param codigo Código a procesar.
      */
-    public Tokenizador(XMLComandos listaCmd,XMLDescriptores listaDesc, String codigo) {
+    public Tokenizador(XMLComandos listaCmd, XMLDescriptores listaDesc, String codigo) {
         this.listaCmd = listaCmd;
         this.listaDesc = listaDesc;
         //Se le añaden dos espacios para que funcione el algoritmo de deteccion
@@ -38,18 +38,10 @@ public final class Tokenizador {
 //-----------------Validaciones previas a la tokenizacion-----------------------
     private boolean validacionPrevia() {
         res = new ResultadoTokenizador();
-        //Sucesión de procedimientos del tokenizador
-        if (!NoVacio()) {
-            return false;
-        }
-        //Desde el punto de vista lexico.
-
-        if (!modoMatematicoCorrecto()) {
-            return false;
-        }
-
-        return true;
+        //Sucesión de procedimientos 
+        return NoVacio() && modoMatematicoCorrecto();
     }
+
     /**
      * Indica si el codigo es vacio
      *
@@ -57,13 +49,14 @@ public final class Tokenizador {
      */
     private boolean NoVacio() {
         if (codigo.equals("  ")) {
-            InfoSintaxis info = crearInfoSintaxis("codigo vacio",0);
+            InfoSintaxis info = crearInfoSintaxis("codigo vacio", 0);
             res.nuevoError(info);
             return false;
         }
 
         return true;
     }
+
     /**
      * Detecta si el modo matemático se presenta en una secuencia correcta, es
      * decir la no existencia de "$$$". Lo cual implica que las apariciones son
@@ -71,34 +64,40 @@ public final class Tokenizador {
      *
      * @return
      */
+    public enum estMMat {
+        NORMAL, SIMPLE, DOBLE
+    };
+
+    @SuppressWarnings("empty-statement")
     private boolean modoMatematicoCorrecto() {
         ///TODO: Verificar todos los $$$, no solo el primero.        
         int pos;
         pos = codigo.indexOf("$$$", 0);
         if (codigo.indexOf("$$$", 0) != -1) {
-            InfoSintaxis info = crearInfoSintaxis("triada de $",pos);
+            InfoSintaxis info = crearInfoSintaxis("triada de $", pos);
             //Informe del error. Esto debe ser de rutina en todo error.
             res.nuevoError(info);
             return false;
         }
-     
-        int estado = 0;
+
+        estMMat estadoMMat;
+        estadoMMat = estMMat.NORMAL;
         for (int i = 0; i < codigo.length() - 1; i++) {
-            switch (estado) {
-                case 0: //Inicial
+            switch (estadoMMat) {
+                case NORMAL: //Inicial
                     if (i != codigo.length() - 2) {
                         if (esPesoAt(i)) {
-                            estado = 1;
+                            estadoMMat = estMMat.SIMPLE;
                         } else if (esPPesoAt(i)) {
-                            estado = 2;
+                            estadoMMat = estMMat.DOBLE;
                             i++; //Esto es para esquivar el segundo peso
                         }
-                    }              
+                    }
                     break;
-                case 1: //$
+                case SIMPLE: //$
                     //Error de paridad
                     if (i == codigo.length() - 2) {
-                        InfoSintaxis info = crearInfoSintaxis("$ extra", i-1);
+                        InfoSintaxis info = crearInfoSintaxis("$ extra", i - 1);
                         res.nuevoError(info);
                         return false;
                     }
@@ -108,24 +107,24 @@ public final class Tokenizador {
                         res.nuevoError(info);
                         return false;
                     } else if (esPesoAt(i)) {
-                        estado = 0;
+                        estadoMMat = estMMat.NORMAL;
                     }
                     break;
-                case 2://$$
+                case DOBLE://$$
                     //Error de paridad
                     if (i == codigo.length() - 2) {
-                        InfoSintaxis info = crearInfoSintaxis("$$ extra",i-2);
+                        InfoSintaxis info = crearInfoSintaxis("$$ extra", i - 2);
                         res.nuevoError(info);
                         return false;
                     }
 
                     if (esPesoAt(i)) {
-                        InfoSintaxis info = crearInfoSintaxis("$$...$",i);
+                        InfoSintaxis info = crearInfoSintaxis("$$...$", i);
                         res.nuevoError(info);
                         return false;
 
                     } else if (esPPesoAt(i)) {
-                        estado = 0;
+                        estadoMMat = estMMat.NORMAL;
                         i++;
                     }
 
@@ -135,9 +134,11 @@ public final class Tokenizador {
         return true;
     }
 //-----------------------Utilidades---------------------------------------------
-    private InfoSintaxis crearInfoSintaxis(String id,int pos){
-        return new InfoSintaxis(listaDesc.hallarPorId("triada de $"),pos,filasEnPos(pos), columnasEnPos(pos));
+
+    private InfoSintaxis crearInfoSintaxis(String id, int pos) {
+        return new InfoSintaxis(listaDesc.hallarPorId("triada de $"), pos, filasEnPos(pos), columnasEnPos(pos));
     }
+
     private int filasEnPos(int i) {
         return contarColumnas(codigo.substring(0, i));
     }
@@ -182,16 +183,62 @@ public final class Tokenizador {
     }
 //---------------------Analisis lexico------------------------------------------
 
-    public boolean analizarCodigo() {
+    private enum estLex {
+        INICIO, CMD, NUM, CARACT
+    };
 
-        if(!validacionPrevia()) return false;
-        
-        
+    public boolean analizarCodigo() {
+        if (!validacionPrevia()) {
+            return false;
+        } else {
+            estLex estado = estLex.INICIO;
+            for (int i = 0; i < codigo.length(); i++) {
+                switch (estado) {
+                    case INICIO:
+                        estado = lexInicio(i);
+                        break;
+                    case CMD:
+                        estado = lexCmd(i);
+                        break;
+                    case NUM:
+                        estado = lexNum(i);
+                        break;
+                    case CARACT:
+                        estado = lexCaract(i);
+                        break;
+                }
+            }
+        }
+
         return true;
     }
-
+///////////////ESTADOS DE PROCESAMIENTO/////////////////////////////////////////
+//    private estLex lexInicio(int i) {
+//    private estLex lexInicio(int i) {
+//        if(CaracterEspecial(i)){
+//            return estLex.INICIO;
+//        }
+//        
+//    }
+//
+//    private estLex lexCmd(int i) {
+//
+//    }
+//
+//    private estLex lexNum(int i) {
+//
+//    }
+//
+//    private estLex lexCaract(int i) {
+//
+//    }
+//////////////////////////HERRAMIENTAS DE PROCESAMIENTO///////////////////////////
+//    private boolean CaracterEspecial(i){
+//        char c = codigo.charAt(i);
+//        if()
+//    }
+/////////////////RESULTADO//////////////////////////////////////////////////////
     public ResultadoTokenizador getRes() {
         return res;
     }
-
 }

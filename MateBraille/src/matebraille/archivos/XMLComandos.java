@@ -7,7 +7,7 @@ package matebraille.archivos;
 
 import java.util.ArrayList;
 import matebraille.compilador.tokenizador.Comando;
-import matebraille.compilador.tokenizador.Tipo;
+import matebraille.compilador.tokenizador.TipoCmd;
 
 /**
  *
@@ -23,10 +23,10 @@ public final class XMLComandos {
      public XMLComandos(){
          //Cargo los comandos básicos.
          //Aqui se debe cargar el XML llamando al parser
-         nuevoCmd(new Comando("$", 0,Tipo.MODO_MATE));
-         nuevoCmd(new Comando("$$", 0,Tipo.MODO_MATE_2));
-         nuevoCmd(new Comando("{",0,Tipo.L_INI));
-         nuevoCmd(new Comando("}",0,Tipo.L_FIN));
+         nuevoCmd(new Comando("$", 0,TipoCmd.MODO_MATE));
+         nuevoCmd(new Comando("$$", 0,TipoCmd.MODO_MATE_2));
+         nuevoCmd(new Comando("{",0,TipoCmd.L_INI));
+         nuevoCmd(new Comando("}",0,TipoCmd.L_FIN));
      }
      
     /**

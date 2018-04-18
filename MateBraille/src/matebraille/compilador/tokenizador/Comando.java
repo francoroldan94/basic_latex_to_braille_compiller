@@ -12,7 +12,7 @@ package matebraille.compilador.tokenizador;
 public class Comando {
     private String literal;
     private int aridad = 0;
-    private Tipo tipo = Tipo.SIMB;
+    private TipoCmd tipo = TipoCmd.SIMB;
     /**
      * Creacion de comando simbólico. (aridad 0)
      * @param literal Comando literal.
@@ -25,9 +25,9 @@ public class Comando {
      * Creación de comando compuesto o caracteres especiales. 
      * @param literal Valor literal del comando.
      * @param aridad Cantidad de subloques. En el caso de las "{,}" o  "$" es nula.
-     * @param tipo Tipo de comando. 
+     * @param tipo TipoCmd de comando. 
      */
-     public Comando(String literal,int aridad, Tipo tipo) {
+     public Comando(String literal,int aridad, TipoCmd tipo) {
         this.literal = literal;
         this.aridad = aridad;
         this.tipo = tipo;
@@ -53,7 +53,7 @@ public class Comando {
      *
      * @return
      */
-    public Tipo getTipo() {
+    public TipoCmd getTipo() {
         return tipo;
     }
 }

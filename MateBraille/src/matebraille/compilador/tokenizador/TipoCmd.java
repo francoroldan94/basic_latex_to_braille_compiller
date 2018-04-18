@@ -9,7 +9,7 @@ package matebraille.compilador.tokenizador;
  * @author franco
  * Tipos de lexemas
  */
-public enum Tipo {
+public enum TipoCmd {
     /**
      *Comando prefijo. Por ejemplo "\frac".
      */
