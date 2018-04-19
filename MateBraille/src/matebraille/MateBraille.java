@@ -20,16 +20,19 @@ public class MateBraille {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Tokenizador toke = new Tokenizador(new XMLComandos(),new XMLDescriptores(),"$\\left(\\left. 123123 \\alpha hola 1$ abs");
-        if(toke.analizarCodigo()){
-            for(int i = 0; i < toke.getRes().getLexemas().size();i++){
+        Tokenizador toke = new Tokenizador(new XMLComandos(), new XMLDescriptores(), "$Hola 123$");
+        if (toke.analizarCodigo()) {
+            for (int i = 0; i < toke.getRes().getLexemas().size(); i++) {
                 Lexema lex = toke.getRes().getLexemas().get(i);
-                if(lex.getCmd() == null)
-                    System.out.println("<"+lex.getValor()+">" + "____" + lex.getTipo().toString() + "___" + lex.getPosicion());
-                else
-                    System.out.println("<"+lex.getValor()+">" + "____" + lex.getTipo().toString()+
-                            ", "+lex.getCmd().getTipo()+ "___" + lex.getPosicion());
+                if (lex.getCmd() == null) {
+                    System.out.println("<" + lex.getValor() + ">" + " Tipo: " + lex.getTipo().toString() + " Posicion: " + lex.getPosicion());
+                } else {
+                    System.out.println("<" + lex.getValor() + ">" + " Tipo: " + lex.getTipo().toString()
+                            + ", " + lex.getCmd().getTipo() + " Posicion: " + lex.getPosicion());
+                    System.out.println("-----------------------------------------");
+                }
             }
+
         }
     }
 }

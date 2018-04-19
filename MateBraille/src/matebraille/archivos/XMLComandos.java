@@ -23,6 +23,8 @@ public final class XMLComandos {
      public XMLComandos(){
          //Cargo los comandos básicos.
          //Aqui se debe cargar el XML llamando al parser
+         
+         /////COMANDOS NATIVOS (SIMBOLOS ESPECIALES)/////////////////
          nuevoCmd(new Comando("$", 0,TipoCmd.MODO_MATE));
          nuevoCmd(new Comando("$$", 0,TipoCmd.MODO_MATE_2));
          nuevoCmd(new Comando("{",0,TipoCmd.L_INI));
@@ -33,6 +35,8 @@ public final class XMLComandos {
          nuevoCmd(new Comando("[",0,TipoCmd.CORCH_FIN));
          nuevoCmd(new Comando("_",0,TipoCmd.SUB));
          nuevoCmd(new Comando("^",0,TipoCmd.SUPRA));
+         nuevoCmd(new Comando(" ",0, TipoCmd.ESPACIO));
+         //////////////////////PRUEBA////////////////////
          nuevoCmd(new Comando("\\alpha",0,TipoCmd.SIMB));
          nuevoCmd(new Comando("\\sum",0,TipoCmd.SIMB));
          nuevoCmd(new Comando("\\alpha",0,TipoCmd.SIMB));
