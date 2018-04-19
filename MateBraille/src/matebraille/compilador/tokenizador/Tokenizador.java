@@ -336,48 +336,32 @@ public final class Tokenizador {
             ret.estado = estLex.CMD;
             return ret;
         } else {
-            Comando cmd;
-            boolean extendido;
-            if (caracter == ' ' || Character.isDigit(caracter)) {
-                cmd = listaCmd.getCmd(contenido.toString());
-                extendido = false;
-            } else {
-                extendido = true;
-                cmd = listaCmd.getCmd(contenido.toString() + caracter);
-            }
-            
-            if (cmd != null) {
+            /**
+             * Se detecta si el comando \contenido# con # el último caracter no alfabético
+             * Es un comando (cmd_ext), en caso de no serlo se verifica si \contenido es un 
+             * Comando (cmd), se adiere la regla de que los comandos no pueden poseer caracteres
+             * Numéricos y se evita el espacio como parte de un cmd. Se absorbe el último caracter
+             * Para que no sea procesado por el inicio.
+             */
+            Comando cmd_ext = listaCmd.getCmd(contenido.toString() + caracter);
+            Comando cmd = listaCmd.getCmd(contenido.toString());
+
+            if (caracter != ' ' && !Character.isDigit(caracter) && cmd_ext != null) {
+                res.nuevoLexema(Lexema.nuevoLexemaCmd(cmd_ext, i - contenido.length()));
+                ret.estado = estLex.INICIO;               
+                contenido.setLength(0); //Siempre vaciar el acumulador.
+                return ret;
+            }else if (cmd != null) {
                 res.nuevoLexema(Lexema.nuevoLexemaCmd(cmd, i - contenido.length()));
-                contenido.setLength(0);
                 ret.estado = estLex.INICIO;
-                if (!extendido) {
-                    ret.i--;
-                }
+                contenido.setLength(0); //Siempre vaciar el acumulador.
+                ret.i--; //Habilita al modo inicio a procesar el último caracter.
                 return ret;
-            } 
-            else {
-                if (extendido) {
-                    cmd = listaCmd.getCmd(contenido.toString());
-                    if (cmd != null) {
-                            res.nuevoLexema(Lexema.nuevoLexemaCmd(cmd, i - contenido.length()));
-                contenido.setLength(0);
-                ret.estado = estLex.INICIO;
-                return ret;
-                    }
-                if (!extendido) {
-                    ret.i--;
-                }
-                return ret;
-                    } else {
-                        res.nuevoError(crearInfoSintaxis("cmd desconocido", contenido.toString(), i - contenido.length()));
-                        contenido.setLength(0);
-                        return null;
-                    }
-                }
+            } else {
+                res.nuevoError(crearInfoSintaxis("cmd desconocido",contenido.toString(),i-contenido.length()));
+                return null;
             }
-
         }
-
     }
 
     private Retorno lexNum(int i, StringBuilder contenido) {
