@@ -4,10 +4,7 @@ Estos son los comandos de latex.
 -->
 <root>
     <cmd>
-        <literal>\alpha</literal>
-        <aridad>0</aridad>
-        <tipo>SIMB</tipo>
-        <categoria>LETRA_GRIEGA</categoria>
+        <literal>\alpha</literal><aridad>0</aridad><tipo>SIMB</tipo><categoria>LETRA_GRIEGA</categoria>
     </cmd>
     
 </root>

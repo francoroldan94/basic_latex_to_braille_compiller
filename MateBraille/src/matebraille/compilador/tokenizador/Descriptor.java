@@ -18,6 +18,21 @@ public class Descriptor {
         this.id = id;
     }
 
+    public Descriptor() {
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }

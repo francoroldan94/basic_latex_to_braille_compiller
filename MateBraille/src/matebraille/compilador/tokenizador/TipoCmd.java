@@ -50,5 +50,7 @@ public enum TipoCmd {
     
     SUPRA, 
     
-    ESPACIO
+    ESPACIO,
+    
+    ENTER
 }

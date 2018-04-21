@@ -144,15 +144,14 @@ public final class Tokenizador {
     }
 
     private int filasEnPos(int i) {
-        return contarColumnas(codigo.substring(0, i));
-    }
-
-    private int columnasEnPos(int i) {
         return contarFilas(codigo.substring(0, i));
     }
 
-    private int contarColumnas(String texto) {
+    private int columnasEnPos(int i) {
+        return contarColumnas(codigo.substring(0, i));
+    }
 
+    private int contarColumnas(String texto) {
         int indice = 0, viejo_indice = 0;
 
         while (indice != -1) {
@@ -162,8 +161,10 @@ public final class Tokenizador {
                 indice = indice + 1;
             }
         }
-
-        return Integer.max((texto.length() - viejo_indice), 1);
+        //Se le suma 1 porque el \ no entra en el texto
+        if(viejo_indice == 0) return texto.length()+1; 
+        //Aquí tampoco se incluye, pero el \n lo compensa
+        return Integer.max((texto.length() - viejo_indice) , 1);
     }
 
     private int contarFilas(String texto) {

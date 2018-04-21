@@ -56,6 +56,7 @@ public final class XMLComandos extends DefaultHandler {
         nuevoCmd(new Comando("_", 0, TipoCmd.SUB));
         nuevoCmd(new Comando("^", 0, TipoCmd.SUPRA));
         nuevoCmd(new Comando(" ", 0, TipoCmd.ESPACIO));
+        nuevoCmd(new Comando("\n",0,TipoCmd.ENTER));
         //////////////////////PRUEBA////////////////////
 //        nuevoCmd(new Comando("\\alpha", 0, TipoCmd.SIMB));
 //        nuevoCmd(new Comando("\\sum", 0, TipoCmd.SIMB));
@@ -76,6 +77,7 @@ public final class XMLComandos extends DefaultHandler {
     }
 
     public void iniciarLectura() {
+     
         try {
             saxParser.parse(file, this);
         } catch (SAXException ex) {
@@ -83,6 +85,7 @@ public final class XMLComandos extends DefaultHandler {
         } catch (IOException ex) {
             Logger.getLogger(XMLComandos.class.getName()).log(Level.SEVERE, null, ex);
         }
+    
     }
     @Override
     public void characters(char[] chars, int inicio, int longitud) throws SAXException {
